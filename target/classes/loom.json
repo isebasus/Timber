@@ -1,1 +1,1 @@
-{"id":"timber","name":"Timber Plugin","version":"V0.1","description":"A plugin that cuts down trees","authors":["isebasus"],"main":"us.isebas.timber.Timber"}
+{"id":"timber","name":"Timber Plugin","version":"V0.1","description":"A plugin that cuts down trees","authors":["isebasus"],"dependencies":[],"minimumApiVersion":"v20W45A","main":"us.isebas.timber.Timber"}
