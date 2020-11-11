@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" build-on-make="true" name="Timber:jar">
-    <output-path>$USER_HOME$/Desktop/bad/plugins</output-path>
+    <output-path>$USER_HOME$/Desktop/LoomServer/plugins</output-path>
     <root id="archive" name="Timber.jar">
       <element id="module-output" name="Timber" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/kyori/text/1.12-1.0.0/text-1.12-1.0.0.jar" path-in-jar="/" />

@@ -4,10 +4,13 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
 import org.apache.logging.log4j.Logger;
 import org.loomdev.api.block.Block;
+import org.loomdev.api.entity.player.Player;
+import org.loomdev.api.event.block.entity.EntityBlockBreakEvent;
 import org.loomdev.api.plugin.annotation.LoomPlugin;
 import org.loomdev.api.plugin.Plugin;
 import org.loomdev.api.server.Server;
 import org.loomdev.api.event.Subscribe;
+import org.loomdev.api.world.World;
 import us.isebas.timber.util.BlockPos;
 import us.isebas.timber.util.BrokenBlockCommand;
 import org.loomdev.api.block.BlockType;
@@ -56,25 +59,24 @@ public class Timber implements Plugin{
 
 
     @Subscribe
-    public void onBlockBroken(BlockBreakEvent event) {
+    public void onBlockBroken(EntityBlockBreakEvent event) {
         i++;
         Block block = event.getBlock();
-        BlockType blockType = block.getType();
-        //WoodType woodtype = new WoodType(blockType);
-
         int x = block.getX();
         int y = block.getY();
         int z = block.getZ();
 
-        BlockPos pos = new BlockPos(new int[]{x, y, z}, block);
+        World world = (World) event.getPlayer().getWorld();
+        BlockType blockType = world.getBlockType(x, y, z);
+
+        BlockPos pos = new BlockPos(new int[]{x, y, z}, blockType);
         ArrayList<BlockPos> blockPos = new ArrayList<>();
         blockPos.add(pos);
 
-        if (map.size() > 5) {
-            map = Collections.emptyMap();
-        }
 
         map.put(i, blockPos);
+        new WoodType(blockType, event);
+
 
     }
 

@@ -1,5 +1,7 @@
 package us.isebas.timber.util;
 
+import com.google.common.collect.Iterables;
+import org.loomdev.api.block.BlockType;
 import us.isebas.timber.Timber;
 import net.kyori.adventure.text.TextComponent;
 import org.loomdev.api.block.Block;
@@ -11,20 +13,21 @@ import org.loomdev.api.plugin.Plugin;
 import org.loomdev.api.util.ChatColor;
 
 import javax.swing.text.html.HTMLDocument;
+import java.io.Console;
 import java.util.*;
 import java.util.List;
 import java.util.Map;
 
 public class BrokenBlockCommand extends Command {
 
-    private Block block;
+    private final ArrayList<BlockType> block = new ArrayList<>();
     private final Map<Integer, ArrayList<BlockPos>> map;
     private int[] posistions = new int[]{};
 
     public BrokenBlockCommand(Map<Integer, ArrayList<BlockPos>> map) {
         super("getBlocks");
         this.map = map;
-        setDescription("Get locations of last block broken.");
+        setDescription("Get locations of last broken blocks.");
     }
 
     @Override
@@ -36,13 +39,21 @@ public class BrokenBlockCommand extends Command {
             ArrayList<BlockPos> arList = map.get(key);
             for (BlockPos bp : arList) {
                 posistions = bp.pos;
-                block = bp.block;
+                block.add(bp.block);
             }
             mapString += " " + key.toString() + ": " + Arrays.toString(posistions);
         }
 
         commandSource.sendMessage(TextComponent.of("Heres yo mf block").color(ChatColor.RED));
         commandSource.sendMessage(TextComponent.of(mapString).color(ChatColor.GOLD));
+
+        int x = (int) player.getLocation().getX();
+        int y = (int) player.getLocation().getY();
+        int z = (int) player.getLocation().getZ();
+
+        BlockType lastBlock = Iterables.getLast(block);
+
+        player.getWorld().setBlockType(x, y, z, lastBlock);
 
 
     }
