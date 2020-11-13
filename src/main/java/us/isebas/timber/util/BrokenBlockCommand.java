@@ -4,12 +4,10 @@ import com.google.common.collect.Iterables;
 import org.loomdev.api.block.BlockType;
 import us.isebas.timber.Timber;
 import net.kyori.adventure.text.TextComponent;
-import org.loomdev.api.block.Block;
+import org.loomdev.api.block.BlockPointer;
 import org.loomdev.api.command.Command;
 import org.loomdev.api.command.CommandSource;
 import org.loomdev.api.entity.player.Player;
-import org.loomdev.api.event.block.BlockBreakEvent;
-import org.loomdev.api.plugin.Plugin;
 import org.loomdev.api.util.ChatColor;
 
 import javax.swing.text.html.HTMLDocument;
@@ -53,7 +51,8 @@ public class BrokenBlockCommand extends Command {
 
         BlockType lastBlock = Iterables.getLast(block);
 
-        player.getWorld().setBlockType(x, y, z, lastBlock);
+        //player.getWorld().setBlockType(x, y, z, lastBlock);
+        player.getWorld().getBlock(x, y, z).setBlockType(lastBlock);
 
 
     }

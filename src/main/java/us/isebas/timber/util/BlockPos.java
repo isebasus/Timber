@@ -1,6 +1,6 @@
 package us.isebas.timber.util;
 
-import org.loomdev.api.block.Block;
+import org.loomdev.api.block.BlockPointer;
 import org.loomdev.api.block.BlockType;
 
 public class BlockPos {

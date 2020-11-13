@@ -3,11 +3,15 @@ package us.isebas.timber;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
 import org.apache.logging.log4j.Logger;
-import org.loomdev.api.block.Block;
+import org.loomdev.api.ApiVersion;
+import org.loomdev.api.block.BlockPointer;
 import org.loomdev.api.entity.player.Player;
 import org.loomdev.api.event.block.entity.EntityBlockBreakEvent;
 import org.loomdev.api.plugin.annotation.LoomPlugin;
-import org.loomdev.api.plugin.Plugin;
+import org.loomdev.api.plugin.PluginManager;
+import org.loomdev.api.event.block.sign.SignWriteEvent;
+import org.loomdev.api.plugin.hooks.Hook;
+import org.loomdev.api.plugin.hooks.PluginEnableHook;
 import org.loomdev.api.server.Server;
 import org.loomdev.api.event.Subscribe;
 import org.loomdev.api.world.World;
@@ -26,10 +30,11 @@ import java.util.*;
         name = "Timber Plugin",
         description = "A plugin that cuts down trees",
         version = "V0.1",
-        authors = { "isebasus" }
+        authors = "isebasus",
+        minimumApiVersion = ApiVersion.UNKNOWN
 )
 
-public class Timber implements Plugin{
+public class Timber {
 
     @Inject
     private Server server;
@@ -43,40 +48,40 @@ public class Timber implements Plugin{
     }
 
     private Integer i = 0;
-    private Map<Integer, ArrayList<BlockPos>> map = new HashMap<>();
+    private final Map<Integer, ArrayList<BlockPos>> map = new HashMap<>();
 
-    @Override
-    public void onPluginEnable() {
+    @Hook
+    public void onPluginEnable(PluginEnableHook hook) {
         logger.info("Hello, enabling the plugin.");
         server.getCommandManager().register(this, new BrokenBlockCommand(map));
         logger.info(this.server != null);
     }
 
-    @Override
+    @Hook
     public void onPluginDisable() {
         logger.info("Bye, disabling the plugin.");
     }
 
+    public void onSign(SignWriteEvent event) {
+        List<String> text = event.getText();
+        text.set(1, "tektoolbithc");
+    }
 
     @Subscribe
     public void onBlockBroken(EntityBlockBreakEvent event) {
         i++;
-        Block block = event.getBlock();
-        int x = block.getX();
-        int y = block.getY();
-        int z = block.getZ();
+        BlockPointer block = event.getBlock();
+        int x = (int) block.getLocation().getX();
+        int y = (int) block.getLocation().getY();
+        int z = (int) block.getLocation().getZ();
 
-        World world = (World) event.getPlayer().getWorld();
-        BlockType blockType = world.getBlockType(x, y, z);
-
-        BlockPos pos = new BlockPos(new int[]{x, y, z}, blockType);
+        BlockPos pos = new BlockPos(new int[]{x, y, z}, block.getBlockType());
         ArrayList<BlockPos> blockPos = new ArrayList<>();
         blockPos.add(pos);
 
 
         map.put(i, blockPos);
-        new WoodType(blockType, event);
-
+        new WoodType(block, event.getEntity().getWorld(), x, y, z);
 
     }
 
